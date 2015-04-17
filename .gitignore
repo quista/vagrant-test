@@ -1,2 +1,18 @@
-.DS_Store
 .vagrant
+
+# tmpfiles backups
+.DS_Store
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+
+# berks loaded
+/cookbooks
+
+# Bundler
+Gemfile.lock
+bin/*
+.bundle/*
