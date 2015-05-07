@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Compiled source #
 ###################
 *.com
@@ -40,24 +39,4 @@ Thumbs.db
 # Vagrant Files #
 #################
 .vagrant
-.box
-=======
-.vagrant
-
-# tmpfiles backups
-.DS_Store
-*~
-*#
-.#*
-\#*#
-.*.sw[a-z]
-*.un~
-
-# berks loaded
-/cookbooks
-
-# Bundler
-Gemfile.lock
-bin/*
-.bundle/*
->>>>>>> 4ac25ef610a5669e563b3e20941598ea0bde1f3b
+*.box
