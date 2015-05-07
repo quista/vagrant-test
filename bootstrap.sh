@@ -67,6 +67,8 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 EOF
   yum makecache
+  yum -y install redhat-lsb-core tree bash-completion
+  yum -y update
 
   echo "Setting timezone"
   cp -fv /usr/share/zoneinfo/Europe/Berlin /etc/localtime

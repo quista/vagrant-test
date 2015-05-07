@@ -1,7 +1,9 @@
 Vagrant.configure('2') do |config|
   box_name = 'centos6'
   box_url = 'http://www.lyricalsoftware.com/downloads/centos65.box'
-
+  config.vbguest.auto_update = false
+  config.vbguest.no_remote = true
+  
   server_list = {
     'test-dev-1' => {
       :ip => '33.33.36.10'
