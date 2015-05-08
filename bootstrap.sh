@@ -67,7 +67,7 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 EOF
   yum makecache
-  yum -y install redhat-lsb-core tree bash-completion
+  yum -y install redhat-lsb-core tree bash-completion subversion git rsync vim gawk perl-XML-Simple perl-DBI
   yum -y update
 
   echo "Setting timezone"
@@ -78,6 +78,33 @@ EOF
 
   echo "Generating some locales"
   localedef -c -i de_DE -f UTF-8 de_DE.UTF-8
+
+  echo "Prepare SPON bootstrap"
+  cat >/usr/local/bin/spon_bootstrap.sh <<EOF
+if test ! -f /etc/default/vagrant-spon-bootstrap-is-done; then
+  groupadd -g 2020 deployuser
+  groupadd -g 2000 spgroup
+  useradd -u 2020 -g 2020 -d /home/deployuser -m deployuser
+  mkdir -p /data/{cgi-bin,conf,dumps,export,import,install,logs,pages,src,status,virtual,jboss} /data/var/{apache,SPNET}
+  mkdir -p /server/{ant,bin,etc,jar,jdk,lib,oracle,sql,www,xml} /server/www/apache
+  chown -R deployuser:spgroup /data/{cgi-bin,conf,dumps,export,import,install,jboss,logs,pages,src,status,var,virtual} /server/{ant,bin,xml,etc,jar,jdk,lib,oracle,sql,www,xml} 
+  chmod 2775 /data/status
+  ln -s /server/lib /usr/share/perl5/SPIEGELNET
+  ln -s /usr/bin/perl /usr/local/bin/perl
+  touch /etc/profile.d/spon.sh
+  chown deployuser:spgroup /etc/profile.d/spon.sh
+  svn --no-auth-cache export http://svn.spiegel.de/repos/commons/admin/trunk/component/ALL /data/src/ALL
+  rsync -r /data/src/ALL/server/. /server/.
+  rsync -r /data/src/ALL/data/. /data/.
+  rsync -r /data/src/ALL/etc/. /etc/.
+  touch /etc/default/vagrant-spon-bootstrap-is-done
+fi
+EOF
+  cat >>/home/vagrant/.bashrc <<EOF
+if ! test -f /etc/default/vagrant-spon-bootstrap-is-done; then
+  sudo sh /usr/local/bin/spon_bootstrap.sh
+fi
+EOF
 
   echo "Configuration done"
   touch $TOGGLEFILE
